@@ -1,0 +1,103 @@
+[vagrant@controlnode ansible]$ ansible-playbook playbook.yml -i hosts.ini
+
+PLAY [all] ***********************************************************************************************************************************************************************************************************************************
+
+TASK [Gathering Facts] ***********************************************************************************************************************************************************************************************************************
+[WARNING]: Host '192.168.30.7' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.20/reference_appendices/interpreter_discovery.html for more information.
+ok: [192.168.30.7]
+[WARNING]: Host '192.168.30.6' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.20/reference_appendices/interpreter_discovery.html for more information.
+ok: [192.168.30.6]
+[WARNING]: Host '192.168.30.8' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.20/reference_appendices/interpreter_discovery.html for more information.
+ok: [192.168.30.8]
+[WARNING]: Host '192.168.30.5' is using the discovered Python interpreter at '/usr/bin/python3.12', but future installation of another Python interpreter could cause a different interpreter to be discovered. See https://docs.ansible.com/ansible-core/2.20/reference_appendices/interpreter_discovery.html for more information.
+ok: [192.168.30.5]
+
+TASK [nginx : Install nginx via apt] *********************************************************************************************************************************************************************************************************
+ok: [192.168.30.7]
+ok: [192.168.30.5]
+ok: [192.168.30.8]
+ok: [192.168.30.6]
+
+TASK [nginx : Delete /var/www/html folder] ***************************************************************************************************************************************************************************************************
+changed: [192.168.30.8]
+changed: [192.168.30.7]
+changed: [192.168.30.6]
+changed: [192.168.30.5]
+
+TASK [nginx : Copy our lending to /var/www/html folder] **************************************************************************************************************************************************************************************
+changed: [192.168.30.7]
+changed: [192.168.30.6]
+changed: [192.168.30.8]
+changed: [192.168.30.5]
+
+TASK [mysql : Install MySQL via apt] *********************************************************************************************************************************************************************************************************
+ok: [192.168.30.6]
+ok: [192.168.30.5]
+ok: [192.168.30.8]
+ok: [192.168.30.7]
+
+TASK [mysql : Install pymysql via apt] *******************************************************************************************************************************************************************************************************
+ok: [192.168.30.5]
+ok: [192.168.30.8]
+ok: [192.168.30.6]
+ok: [192.168.30.7]
+
+TASK [mysql : Set up root user] **************************************************************************************************************************************************************************************************************
+[WARNING]: Deprecation warnings can be disabled by setting `deprecation_warnings=False` in ansible.cfg.
+[DEPRECATION WARNING]: Importing 'to_native' from 'ansible.module_utils._text' is deprecated. This feature will be removed from ansible-core version 2.24. Use ansible.module_utils.common.text.converters instead.
+ok: [192.168.30.8]
+ok: [192.168.30.7]
+ok: [192.168.30.6]
+ok: [192.168.30.5]
+
+TASK [mysql : Removed anonimous user] ********************************************************************************************************************************************************************************************************
+ok: [192.168.30.5]
+ok: [192.168.30.6]
+ok: [192.168.30.7]
+ok: [192.168.30.8]
+
+TASK [mysql : Removed test database] *********************************************************************************************************************************************************************************************************
+ok: [192.168.30.8]
+ok: [192.168.30.5]
+ok: [192.168.30.7]
+ok: [192.168.30.6]
+
+TASK [php : Installing php fpm and php mysql] ************************************************************************************************************************************************************************************************
+ok: [192.168.30.6] => (item=php-fpm)
+ok: [192.168.30.7] => (item=php-fpm)
+ok: [192.168.30.8] => (item=php-fpm)
+ok: [192.168.30.5] => (item=php-fpm)
+ok: [192.168.30.5] => (item=php-mysql)
+ok: [192.168.30.8] => (item=php-mysql)
+ok: [192.168.30.6] => (item=php-mysql)
+ok: [192.168.30.7] => (item=php-mysql)
+
+TASK [php : Copy our php to /var/www/test.ru folder] *****************************************************************************************************************************************************************************************
+ok: [192.168.30.5]
+ok: [192.168.30.6]
+ok: [192.168.30.7]
+ok: [192.168.30.8]
+
+TASK [php : Copy nginx config] ***************************************************************************************************************************************************************************************************************
+ok: [192.168.30.5]
+ok: [192.168.30.6]
+ok: [192.168.30.7]
+ok: [192.168.30.8]
+
+TASK [php : Create simlink nginx] ************************************************************************************************************************************************************************************************************
+ok: [192.168.30.5]
+ok: [192.168.30.6]
+ok: [192.168.30.7]
+ok: [192.168.30.8]
+
+TASK [Reload nginx] **************************************************************************************************************************************************************************************************************************
+changed: [192.168.30.5]
+changed: [192.168.30.8]
+changed: [192.168.30.6]
+changed: [192.168.30.7]
+
+PLAY RECAP ***********************************************************************************************************************************************************************************************************************************
+192.168.30.5               : ok=14   changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+192.168.30.6               : ok=14   changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+192.168.30.7               : ok=14   changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0   
+192.168.30.8               : ok=14   changed=3    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0

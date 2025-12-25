@@ -1,0 +1,30 @@
+- name: "Installing php fpm and php mysql"
+  ansible.builtin.apt:
+    name: "{{ item }}"
+    state: "latest"
+    update_cache: true
+  with_items:
+    - "php-fpm"
+    - "php-mysql"
+
+- name: "Copy our php to /var/www/test.ru folder"
+  ansible.builtin.copy:
+    src: "files/php/"
+    dest: "/var/www/test.ru"
+    owner: "vagrant"
+    group: "vagrant"
+    mode: "0644"
+
+- name: "Copy nginx config"
+  ansible.builtin.copy:
+    src: "files/nginx/test.ru.conf"
+    dest: "/etc/nginx/sites-available/test.ru.conf"
+    owner: "vagrant"
+    group: "vagrant"
+    mode: "0644"
+
+- name: "Create simlink nginx"
+  ansible.builtin.file:
+    src: "/etc/nginx/sites-available/test.ru.conf"
+    dest: "/etc/nginx/sites-enabled/test.ru.conf"
+    state: "link"
