@@ -1,0 +1,100 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# All Vagrant configuration is done below. The "2" in Vagrant.configure
+# configures the configuration version (we support older styles for
+# backwards compatibility). Please don't change it unless you know what
+# you're doing.
+Vagrant.configure("2") do |config|
+ config.vm.define "controlnode" do |controlnode|
+   controlnode.vm.box = "ubuntu2404"
+   controlnode.vm.hostname = "controlnode"
+   controlnode.vm.network "private_network", ip: "192.168.30.4"
+   controlnode.vm.synced_folder "./ansible","/home/ansible"
+   controlnode.vm.provider :libvirt do |libvirt|
+     libvirt.memory = 1024
+   end
+   controlnode.ssh.pty = false
+   controlnode.ssh.keep_alive = true
+   controlnode.ssh.forward_agent = true
+   controlnode.vm.provision "shell", inline: <<-SHELL
+     sed -i 's/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/#g' /etc/ssh/sshd_config
+     systemctl restart ssh
+  SHELL
+  config.vm.provision "file", source: "files/id_rsa", destination: "/home/vagrant/.ssh/"
+  config.vm.provision "file", source: "files/id_rsa.pub", destination: "/home/vagrant/.ssh/"
+  controlnode.vm.provision "shell", inline: <<-SHELL
+     sudo apt update -y && apt --assume-yes install ansible && apt install sshpass
+     sudo chmod 600 /home/vagrant/.ssh/id_rsa
+     sudo chmod 600 /home/vagrant/.ssh/id_rsa.pub
+  SHELL
+ end
+ 
+ config.vm.define "server1" do |server1|
+   server1.vm.box = "ubuntu2404"
+   server1.vm.hostname = "server1"
+   server1.vm.network "private_network", ip: "192.168.30.5"
+   server1.vm.provider :libvirt do |libvirt|
+     libvirt.memory = 1024
+   end
+   server1.ssh.pty = false
+   server1.ssh.keep_alive = true
+   server1.ssh.forward_agent = true
+   config.vm.provision "file", source: "files/id_rsa.pub", destination: "/home/vagrant/.ssh/"
+   server1.vm.provision "shell", inline: <<-SHELL
+     sudo chmod 600 /home/vagrant/.ssh/id_rsa.pub
+     cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
+  SHELL
+ end
+ 
+ config.vm.define "server2" do |server2|
+   server2.vm.box = "ubuntu2404"
+   server2.vm.hostname = "server2"
+   server2.vm.network "private_network", ip: "192.168.30.6"
+   server2.vm.provider :libvirt do |libvirt|
+     libvirt.memory = 1024
+   end
+   server2.ssh.pty = false
+   server2.ssh.keep_alive = true
+   server2.ssh.forward_agent = true
+   config.vm.provision "file", source: "files/id_rsa.pub", destination: "/home/vagrant/.ssh/"
+   server2.vm.provision "shell", inline: <<-SHELL
+     sudo chmod 600 /home/vagrant/.ssh/id_rsa.pub
+     cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
+  SHELL
+ end
+ 
+ config.vm.define "server3" do |server3|
+   server3.vm.box = "alma10"
+   server3.vm.hostname = "server3"
+   server3.vm.network "private_network", ip: "192.168.30.7"
+   server3.vm.provider :libvirt do |libvirt|
+     libvirt.memory = 1024
+   end
+   server3.ssh.pty = false
+   server3.ssh.keep_alive = true
+   server3.ssh.forward_agent = true
+   config.vm.provision "file", source: "files/id_rsa.pub", destination: "/home/vagrant/.ssh/"
+   server3.vm.provision "shell", inline: <<-SHELL
+     sudo chmod 600 /home/vagrant/.ssh/id_rsa.pub
+     cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
+  SHELL
+ end
+ 
+ config.vm.define "server4" do |server4|
+   server4.vm.box = "alma10"
+   server4.vm.hostname = "server4"
+   server4.vm.network "private_network", ip: "192.168.30.8"
+   server4.vm.provider :libvirt do |libvirt|
+     libvirt.memory = 1024
+   end
+   server4.ssh.pty = false
+   server4.ssh.keep_alive = true
+   server4.ssh.forward_agent = true
+   config.vm.provision "file", source: "files/id_rsa.pub", destination: "/home/vagrant/.ssh/"
+   server4.vm.provision "shell", inline: <<-SHELL
+     sudo chmod 600 /home/vagrant/.ssh/id_rsa.pub
+     cat /home/vagrant/.ssh/id_rsa.pub >> /home/vagrant/.ssh/authorized_keys
+  SHELL
+ end
+end
